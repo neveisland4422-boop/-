@@ -1,0 +1,149 @@
+import numpy as np
+import time
+import math
+np.random.seed(1)
+print("练习1：矩阵运算与性能优化")
+print("=" * 50)
+print("\n任务1：矩阵乘法优化")
+A = np.random.random((1000, 2000))
+B = np.random.random((2000, 3000))
+start = time.perf_counter()
+C1 = np.dot(A, B)
+end = time.perf_counter()
+dot_time = end - start
+start = time.perf_counter()
+C2 = A @ B
+end = time.perf_counter()
+at_time = end - start
+start = time.perf_counter()
+C3 = np.matmul(A, B)
+end = time.perf_counter()
+matmul_time = end - start
+print("np.dot(A, B) 结果形状：", C1.shape)
+print("A @ B 结果形状：", C2.shape)
+print("np.matmul(A, B) 结果形状：", C3.shape)
+print("np.dot(A, B) 用时：", round(dot_time, 4), "秒")
+print("A @ B 用时：", round(at_time, 4), "秒")
+print("np.matmul(A, B) 用时：", round(matmul_time, 4), "秒")
+print("三个结果是否接近：")
+print(np.allclose(C1, C2))
+print(np.allclose(C1, C3))
+print("\n任务2：内存布局影响")
+arr_c = np.random.random((1000, 1000))
+arr_f = np.array(arr_c, order="F")
+
+print("arr_c 是否 C 顺序：", arr_c.flags["C_CONTIGUOUS"])
+print("arr_c 是否 F 顺序：", arr_c.flags["F_CONTIGUOUS"])
+
+print("arr_f 是否 C 顺序：", arr_f.flags["C_CONTIGUOUS"])
+print("arr_f 是否 F 顺序：", arr_f.flags["F_CONTIGUOUS"])
+
+start = time.perf_counter()
+row_sum_c = np.sum(arr_c, axis=1)
+end = time.perf_counter()
+c_row_time = end - start
+
+start = time.perf_counter()
+col_sum_c = np.sum(arr_c, axis=0)
+end = time.perf_counter()
+c_col_time = end - start
+
+start = time.perf_counter()
+row_sum_f = np.sum(arr_f, axis=1)
+end = time.perf_counter()
+f_row_time = end - start
+
+start = time.perf_counter()
+col_sum_f = np.sum(arr_f, axis=0)
+end = time.perf_counter()
+f_col_time = end - start
+
+print("C 顺序数组按行求和用时：", round(c_row_time, 6), "秒")
+print("C 顺序数组按列求和用时：", round(c_col_time, 6), "秒")
+print("F 顺序数组按行求和用时：", round(f_row_time, 6), "秒")
+print("F 顺序数组按列求和用时：", round(f_col_time, 6), "秒")
+
+
+print("\n任务3：避免临时内存分配")
+
+A = np.random.random((1000, 1000))
+
+start = time.perf_counter()
+result1 = A * A + 2 * A + 1
+end = time.perf_counter()
+normal_time = end - start
+
+result2 = np.empty_like(A)
+
+start = time.perf_counter()
+np.multiply(A, A, out=result2)
+np.add(result2, 2 * A, out=result2)
+np.add(result2, 1, out=result2)
+end = time.perf_counter()
+out_time = end - start
+
+print("普通写法用时：", round(normal_time, 6), "秒")
+print("使用 out 参数用时：", round(out_time, 6), "秒")
+print("两个结果是否接近：", np.allclose(result1, result2))
+
+
+print("\n")
+print("练习2：金融数据分析实战")
+print("=" * 50)
+
+
+print("\n任务1：股票收益率计算")
+
+prices = np.array([100, 102, 105, 103, 107])
+
+returns = np.log(prices[1:] / prices[:-1])
+
+print("股票价格：")
+print(prices)
+
+print("每日对数收益率：")
+print(returns)
+
+print("每日对数收益率百分比：")
+print(np.round(returns * 100, 2))
+
+
+print("\n任务2：移动平均线")
+
+days = 100
+price_changes = np.random.normal(0, 1, days)
+stock_prices = 100 + np.cumsum(price_changes)
+
+window5 = 5
+window20 = 20
+
+ma5 = np.convolve(stock_prices, np.ones(window5) / window5, mode="valid")
+ma20 = np.convolve(stock_prices, np.ones(window20) / window20, mode="valid")
+print("前10天模拟股价：")
+print(np.round(stock_prices[:10], 2))
+print("5日移动平均线前10个结果：")
+print(np.round(ma5[:10], 2))
+print("20日移动平均线前10个结果：")
+print(np.round(ma20[:10], 2))
+print("\n任务3：风险分析")
+stock_num = 1000
+trading_days = 252
+returns_data = np.random.normal(0.0005, 0.02, size=(stock_num, trading_days))
+daily_std = np.std(returns_data, axis=1)
+annual_volatility = daily_std * math.sqrt(252)
+corr_matrix = np.corrcoef(returns_data)
+print("收益率数据形状：", returns_data.shape)
+print("前10支股票的年化波动率：")
+print(np.round(annual_volatility[:10], 4))
+print("相关系数矩阵形状：")
+print(corr_matrix.shape)
+print("前5支股票之间的相关系数矩阵：")
+print(np.round(corr_matrix[:5, :5], 3))
+print("\n补充：keepdims 的简单例子")
+mean_keep = np.mean(returns_data, axis=1, keepdims=True)
+centered_returns = returns_data - mean_keep
+print("mean_keep 的形状：", mean_keep.shape)
+print("centered_returns 的形状：", centered_returns.shape)
+
+
+print("\n全部任务完成。")
