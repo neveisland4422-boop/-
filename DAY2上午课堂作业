@@ -1,0 +1,108 @@
+import numpy as np
+
+print("练习1：数组创建与形状操作")
+
+arr = np.random.randint(0, 10, size=(3, 4))
+reshaped_arr = arr.reshape(4, 3).T
+filtered_arr = arr[arr > 5]
+
+print("原数组：")
+print(arr)
+
+print("重塑后再转置：")
+print(reshaped_arr)
+
+print("大于5的元素：")
+print(filtered_arr)
+
+
+print("\n练习2：索引与切片")
+
+arr = np.array([[1, 2, 3, 4],
+                [5, 6, 7, 8],
+                [9, 10, 11, 12]])
+
+result1 = arr[1, 0:3]
+result2 = arr[:, 2]
+result3 = arr[::2, :]
+
+print("原数组：")
+print(arr)
+
+print("第2行的第1到3列：")
+print(result1)
+
+print("所有行的第3列：")
+print(result2)
+
+print("奇数行：")
+print(result3)
+
+
+print("\n练习3：矢量化运算与聚合函数")
+
+A = np.random.randint(1, 10, size=(2, 3))
+B = np.random.randint(1, 10, size=(2, 3))
+
+element_multiply = A * B
+matrix_multiply = A @ B.T
+
+arr_sum = np.array([[1, 2],
+                    [3, 4]])
+
+row_sum = np.sum(arr_sum, axis=1)
+col_sum = np.sum(arr_sum, axis=0)
+
+arr_float = np.array([1.2, 3.5, 2.8])
+
+mean_value = np.mean(arr_float)
+std_value = np.std(arr_float)
+round_value = np.round(arr_float)
+
+print("A：")
+print(A)
+
+print("B：")
+print(B)
+
+print("A * B：")
+print(element_multiply)
+
+print("A @ B.T：")
+print(matrix_multiply)
+
+print("按行求和：")
+print(row_sum)
+
+print("按列求和：")
+print(col_sum)
+
+print("均值：")
+print(mean_value)
+
+print("标准差：")
+print(std_value)
+
+print("四舍五入：")
+print(round_value)
+
+
+print("\n练习4：综合应用")
+
+arr = np.random.random(10)
+
+normalized_arr = (arr - np.min(arr)) / (np.max(arr) - np.min(arr)) * 100
+cumsum_arr = np.cumsum(normalized_arr)
+cummax_arr = np.maximum.accumulate(normalized_arr)
+
+print("原随机数组：")
+print(arr)
+
+print("归一化到0到100后的数组：")
+print(normalized_arr)
+
+print("累计和：")
+print(cumsum_arr)
+
+print("累计最大值：")
+print(cummax_arr)
