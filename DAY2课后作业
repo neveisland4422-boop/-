@@ -1,0 +1,230 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(42)
+
+print("Day 2 课后作业")
+print("=" * 50)
+
+
+print("\n一、NumPy 数组基础操作")
+print("-" * 50)
+
+arr1 = np.array([1, 2, 3, 4, 5])
+arr2 = np.array([[1, 2, 3],
+                 [4, 5, 6]])
+arr3 = np.array([[[1, 2], [3, 4]],
+                 [[5, 6], [7, 8]]])
+
+print("1D 数组：")
+print(arr1)
+print("1D 数组形状：", arr1.shape)
+
+print("\n2D 数组：")
+print(arr2)
+print("2D 数组形状：", arr2.shape)
+
+print("\n3D 数组：")
+print(arr3)
+print("3D 数组形状：", arr3.shape)
+
+
+print("\n二、索引与切片")
+print("-" * 50)
+
+data = np.array([[10, 20, 30, 40],
+                 [50, 60, 70, 80],
+                 [90, 100, 110, 120]])
+
+print("原数组：")
+print(data)
+
+print("第2行：")
+print(data[1, :])
+
+print("第3列：")
+print(data[:, 2])
+
+print("前2行、前3列：")
+print(data[0:2, 0:3])
+
+print("大于60的元素：")
+print(data[data > 60])
+
+
+print("\n三、形状变换")
+print("-" * 50)
+
+arr = np.arange(1, 13)
+
+print("原一维数组：")
+print(arr)
+
+arr_3_4 = arr.reshape(3, 4)
+arr_4_3 = arr.reshape(4, 3)
+
+print("变成 3行4列：")
+print(arr_3_4)
+
+print("变成 4行3列：")
+print(arr_4_3)
+
+print("3行4列数组的转置：")
+print(arr_3_4.T)
+
+
+print("\n四、矩阵基本运算")
+print("-" * 50)
+
+def matrix_add(A, B):
+    return A + B
+
+def matrix_multiply_element(A, B):
+    return A * B
+
+def matrix_multiply(A, B):
+    return A @ B
+
+def matrix_transpose(A):
+    return A.T
+
+A = np.array([[1, 2],
+              [3, 4]])
+
+B = np.array([[5, 6],
+              [7, 8]])
+
+print("矩阵 A：")
+print(A)
+
+print("矩阵 B：")
+print(B)
+
+print("A + B：")
+print(matrix_add(A, B))
+
+print("A * B：")
+print(matrix_multiply_element(A, B))
+
+print("A @ B：")
+print(matrix_multiply(A, B))
+
+print("A 的转置：")
+print(matrix_transpose(A))
+
+
+print("\n五、随机数据的统计分析")
+print("-" * 50)
+
+random_data = np.random.normal(loc=70, scale=10, size=100)
+
+print("随机生成的前10个数据：")
+print(np.round(random_data[:10], 2))
+
+print("均值：", round(np.mean(random_data), 2))
+print("标准差：", round(np.std(random_data), 2))
+print("最大值：", round(np.max(random_data), 2))
+print("最小值：", round(np.min(random_data), 2))
+print("中位数：", round(np.median(random_data), 2))
+
+
+print("\n六、金融数据分析实战")
+print("-" * 50)
+
+days = 120
+initial_price = 100
+
+daily_returns = np.random.normal(loc=0.0005, scale=0.02, size=days)
+prices = initial_price * np.cumprod(1 + daily_returns)
+
+print("模拟股票价格前10天：")
+print(np.round(prices[:10], 2))
+
+log_returns = np.log(prices[1:] / prices[:-1])
+
+print("对数收益率前10个：")
+print(np.round(log_returns[:10], 4))
+
+average_return = np.mean(log_returns)
+daily_volatility = np.std(log_returns)
+annual_volatility = daily_volatility * np.sqrt(252)
+
+print("平均日收益率：", round(average_return, 6))
+print("日波动率：", round(daily_volatility, 6))
+print("年化波动率：", round(annual_volatility, 4))
+
+
+print("\n七、移动平均线")
+print("-" * 50)
+
+window5 = 5
+window20 = 20
+
+ma5 = np.convolve(prices, np.ones(window5) / window5, mode="valid")
+ma20 = np.convolve(prices, np.ones(window20) / window20, mode="valid")
+
+print("5日移动平均线前10个：")
+print(np.round(ma5[:10], 2))
+
+print("20日移动平均线前10个：")
+print(np.round(ma20[:10], 2))
+
+
+print("\n八、投资组合风险分析")
+print("-" * 50)
+
+stock_count = 4
+days = 120
+
+returns_matrix = np.random.normal(loc=0.0005, scale=0.02, size=(days, stock_count))
+
+print("收益率矩阵形状：")
+print(returns_matrix.shape)
+
+stock_mean_returns = np.mean(returns_matrix, axis=0)
+stock_volatility = np.std(returns_matrix, axis=0)
+
+print("每支股票的平均收益率：")
+print(np.round(stock_mean_returns, 6))
+
+print("每支股票的波动率：")
+print(np.round(stock_volatility, 6))
+
+cov_matrix = np.cov(returns_matrix, rowvar=False)
+corr_matrix = np.corrcoef(returns_matrix, rowvar=False)
+
+print("协方差矩阵：")
+print(np.round(cov_matrix, 6))
+
+print("相关系数矩阵：")
+print(np.round(corr_matrix, 3))
+
+
+print("\n九、可视化展示")
+print("-" * 50)
+
+plt.figure(figsize=(10, 5))
+plt.plot(prices, label="Stock Price")
+plt.plot(range(window5 - 1, len(prices)), ma5, label="MA5")
+plt.plot(range(window20 - 1, len(prices)), ma20, label="MA20")
+plt.title("Simulated Stock Price and Moving Average")
+plt.xlabel("Day")
+plt.ylabel("Price")
+plt.legend()
+plt.grid(True)
+plt.show()
+
+plt.figure(figsize=(6, 5))
+plt.imshow(corr_matrix)
+plt.colorbar()
+plt.title("Correlation Matrix")
+plt.xticks(range(stock_count), ["Stock1", "Stock2", "Stock3", "Stock4"])
+plt.yticks(range(stock_count), ["Stock1", "Stock2", "Stock3", "Stock4"])
+
+for i in range(stock_count):
+    for j in range(stock_count):
+        plt.text(j, i, round(corr_matrix[i, j], 2),
+                 ha="center", va="center")
+
+plt.show()
+
