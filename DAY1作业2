@@ -1,0 +1,128 @@
+# 作业2：数学计算器与文件操作
+
+def add(a, b):
+    return a + b
+
+
+def subtract(a, b):
+    return a - b
+
+
+def multiply(a, b):
+    return a * b
+
+
+def divide(a, b):
+    if b == 0:
+        return "错误：除数不能为0"
+    return a / b
+
+
+def power(a, b):
+    return a ** b
+
+
+def square_root(a):
+    if a < 0:
+        return "错误：负数不能开平方"
+    return a ** 0.5
+
+
+def save_history(record):
+    with open("calculator_history.txt", "a", encoding="utf-8") as file:
+        file.write(record + "\n")
+
+
+def show_history():
+    try:
+        with open("calculator_history.txt", "r", encoding="utf-8") as file:
+            content = file.read()
+
+            if content == "":
+                print("暂无历史记录。")
+            else:
+                print("====== 计算历史记录 ======")
+                print(content)
+
+    except FileNotFoundError:
+        print("暂时没有历史记录文件。")
+
+
+def get_number(prompt):
+    while True:
+        try:
+            number = float(input(prompt))
+            return number
+        except ValueError:
+            print("输入错误，请输入数字。")
+
+
+while True:
+    print("\n====== 数学计算器 ======")
+    print("1. 加法")
+    print("2. 减法")
+    print("3. 乘法")
+    print("4. 除法")
+    print("5. 幂运算")
+    print("6. 开平方")
+    print("7. 查看历史记录")
+    print("0. 退出")
+
+    choice = input("请输入功能编号：")
+
+    if choice == "1":
+        a = get_number("请输入第一个数：")
+        b = get_number("请输入第二个数：")
+        result = add(a, b)
+        record = f"{a} + {b} = {result}"
+        print(record)
+        save_history(record)
+
+    elif choice == "2":
+        a = get_number("请输入第一个数：")
+        b = get_number("请输入第二个数：")
+        result = subtract(a, b)
+        record = f"{a} - {b} = {result}"
+        print(record)
+        save_history(record)
+
+    elif choice == "3":
+        a = get_number("请输入第一个数：")
+        b = get_number("请输入第二个数：")
+        result = multiply(a, b)
+        record = f"{a} * {b} = {result}"
+        print(record)
+        save_history(record)
+
+    elif choice == "4":
+        a = get_number("请输入第一个数：")
+        b = get_number("请输入第二个数：")
+        result = divide(a, b)
+        record = f"{a} / {b} = {result}"
+        print(record)
+        save_history(record)
+
+    elif choice == "5":
+        a = get_number("请输入底数：")
+        b = get_number("请输入指数：")
+        result = power(a, b)
+        record = f"{a} ** {b} = {result}"
+        print(record)
+        save_history(record)
+
+    elif choice == "6":
+        a = get_number("请输入要开方的数：")
+        result = square_root(a)
+        record = f"sqrt({a}) = {result}"
+        print(record)
+        save_history(record)
+
+    elif choice == "7":
+        show_history()
+
+    elif choice == "0":
+        print("程序结束。")
+        break
+
+    else:
+        print("输入有误，请重新输入。")
