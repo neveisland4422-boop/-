@@ -1,0 +1,178 @@
+import numpy as np
+
+students = []
+
+
+def input_scores():
+    students.clear()
+
+    try:
+        num = int(input("请输入学生人数："))
+    except ValueError:
+        print("学生人数必须是整数。")
+        return
+
+    for i in range(num):
+        name = input("请输入第" + str(i + 1) + "个学生姓名：")
+
+        try:
+            score = float(input("请输入成绩："))
+        except ValueError:
+            print("成绩必须是数字，本次录入失败。")
+            return
+
+        if score < 0 or score > 100:
+            print("成绩应该在0到100之间，本次录入失败。")
+            return
+
+        student = {
+            "name": name,
+            "score": score
+        }
+
+        students.append(student)
+
+    print("成绩数据录入完成。")
+
+
+def get_score_array():
+    scores = []
+
+    for student in students:
+        scores.append(student["score"])
+
+    return np.array(scores)
+
+
+def show_statistics():
+    if len(students) == 0:
+        print("请先输入成绩数据。")
+        return
+
+    scores = get_score_array()
+
+    average_score = np.mean(scores)
+    max_score = np.max(scores)
+    min_score = np.min(scores)
+    std_score = np.std(scores)
+
+    print("\n成绩统计结果")
+    print("学生人数：", len(students))
+    print("平均分：", round(average_score, 2))
+    print("最高分：", max_score)
+    print("最低分：", min_score)
+    print("标准差：", round(std_score, 2))
+
+
+def show_ranking():
+    if len(students) == 0:
+        print("请先输入成绩数据。")
+        return
+
+    ranked_students = sorted(students, key=lambda x: x["score"], reverse=True)
+
+    print("\n成绩排名")
+
+    for i in range(len(ranked_students)):
+        print("第" + str(i + 1) + "名：",
+              ranked_students[i]["name"],
+              ranked_students[i]["score"])
+
+
+def get_level(score):
+    if score >= 90:
+        return "优秀"
+    elif score >= 80:
+        return "良好"
+    elif score >= 70:
+        return "中等"
+    elif score >= 60:
+        return "及格"
+    else:
+        return "不及格"
+
+
+def show_distribution():
+    if len(students) == 0:
+        print("请先输入成绩数据。")
+        return
+
+    excellent = 0
+    good = 0
+    middle = 0
+    pass_num = 0
+    fail = 0
+
+    for student in students:
+        score = student["score"]
+
+        if score >= 90:
+            excellent += 1
+        elif score >= 80:
+            good += 1
+        elif score >= 70:
+            middle += 1
+        elif score >= 60:
+            pass_num += 1
+        else:
+            fail += 1
+
+    print("\n成绩分布")
+    print("优秀（90-100）：", excellent, "人")
+    print("良好（80-89）：", good, "人")
+    print("中等（70-79）：", middle, "人")
+    print("及格（60-69）：", pass_num, "人")
+    print("不及格（0-59）：", fail, "人")
+
+
+def search_student():
+    if len(students) == 0:
+        print("请先输入成绩数据。")
+        return
+
+    name = input("请输入要查询的学生姓名：")
+    found = False
+
+    for student in students:
+        if student["name"] == name:
+            level = get_level(student["score"])
+            print("\n查询结果")
+            print("姓名：", student["name"])
+            print("成绩：", student["score"])
+            print("等级：", level)
+            found = True
+
+    if found == False:
+        print("没有找到该学生。")
+
+
+def show_menu():
+    print("成绩分析系统")
+    print("1. 输入成绩数据")
+    print("2. 查看成绩统计")
+    print("3. 查看成绩排名")
+    print("4. 查看成绩分布")
+    print("5. 查询学生成绩")
+    print("6. 退出系统")
+
+
+while True:
+    show_menu()
+
+    choice = input("请选择：")
+
+    if choice == "1":
+        input_scores()
+    elif choice == "2":
+        show_statistics()
+    elif choice == "3":
+        show_ranking()
+    elif choice == "4":
+        show_distribution()
+    elif choice == "5":
+        search_student()
+    elif choice == "6":
+        print("系统已退出。")
+        break
+    else:
+        print("输入有误，请重新选择。")
